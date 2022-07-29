@@ -1,0 +1,4 @@
+# Declare the "extrstream"&"tuplecall" files as C++ Header File
+extrstream linguist-language=C++
+tuplecall  linguist-language=C++
+
