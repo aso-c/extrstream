@@ -125,7 +125,7 @@ FILE* cfile(std::ostream const& os)
     if(&os == &std::cout) return stdout;
     if(&os == &std::clog) return stderr;
     if(dynamic_cast<std::ostringstream const*>(&os) != 0){
-       throw std::runtime_error("don't know cannot extract FILE pointer from std::ostringstream");
+	throw std::runtime_error("don't know cannot extract FILE pointer from std::ostringstream");
     }
     return nullptr; // stream not recognized
 }; /* cfile(std::ostream) */
@@ -138,7 +138,7 @@ FILE* cfile(std::istream const& is)
     if(std::ifstream const* ifsP = dynamic_cast<std::ifstream const*>(&is)) return cfile(*ifsP);
     if(&is == &std::cin) return stdin;
     if(dynamic_cast<std::ostringstream const*>(&is) != 0){
-        throw std::runtime_error("don't know how to extract FILE pointer from std::istringstream");
+	throw std::runtime_error("don't know how to extract FILE pointer from std::istringstream");
     }
     return nullptr; // stream not recognized
 }; /* cfile(std::istream) */
