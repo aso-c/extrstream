@@ -87,10 +87,10 @@ namespace aso
     class Formatter
     {
     public:
-	Formatter (const std::string&&, PrnTypes&&...);
+	Formatter (const std::string&, PrnTypes&...);
 	template <typename OutStream>
 	    OutStream& output(OutStream&) const;
-	Formatter(const std::tuple<std::string, PrnTypes...>&& data): items(data) {};
+	Formatter(const std::tuple<std::string, PrnTypes...>& data): items(data) {};
 
 	template<typename T>
 	Formatter<PrnTypes..., T> generate(T&& item) const {
@@ -135,11 +135,14 @@ namespace aso
 	return item.c_str();
     };
 
+    inline int subst(const int& item) {
+	return item;
+    };
 
 
     // Comnstructor
     template <typename ...PrnTypes>
-    inline Formatter<PrnTypes...>::Formatter(const std::string&& fmt_str, PrnTypes&&  ... prnvals):
+    inline Formatter<PrnTypes...>::Formatter(const std::string& fmt_str, PrnTypes&  ... prnvals):
 	items(std::forward<const std::string>(fmt_str), prnvals...)
     {};
 
@@ -149,15 +152,16 @@ namespace aso
     inline OutStream&
 	Formatter<PrnTypes...>::output(OutStream& os) const
     {
-//	return Tuple<const std::string, PrnTypes...>::simple::call([&os](const std::string& fstr, PrnTypes... prnitems) mutable -> OutStream&
-//		{return output_helper(os, fstr, prnitems...);}, items);
-//	return Tuple<const std::string, PrnTypes...>::simple_call([&os](const std::string& fstr, PrnTypes... prnitems) mutable -> OutStream&
-//		{return output_helper(os, fstr, prnitems...);}, items);
 	return simple_tuplecall([&os](const std::string& fstr, PrnTypes... prnitems) mutable -> OutStream&
 		{return output_helper(os, fstr, prnitems...);}, items);
     }; /* format::output */
 
 
+#if __cplusplus >= 201703L
+    // Deduction guide for class aso::Format
+    template<class ... PrnTypes>
+    Formatter(PrnTypes...)-> Formatter<PrnTypes...>;
+#endif
 
     // Create object Formatter from passed parameters
     // for formatting output according format string as (x)prinf() library
